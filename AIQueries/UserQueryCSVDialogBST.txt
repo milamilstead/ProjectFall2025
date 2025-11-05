@@ -1,0 +1,20 @@
+Please write code using Java Swing to provide a single Java class named "UserQueryCSVDialogBST" that does the following:
+
+1. Provide a single dialog that reads a list of files from an input directory, displays the list of files to the user, and then allows the user to select a file for subsequent queries. Please make the file selection generic so the user can navigate to other directories and files as necessary.
+
+Set the default directory to: "DataFiles\ThirdPartyDataCSVFiles"
+
+Set the default file for the dialog to be: TopSongs5000Edited.csv. Highlight this file in the dialog.
+
+2. After the user selects a file, please have the code do the following:
+
+2.1 Create a new object called ourKVStringPairBinarySearchTree that is of type KVStringPairBinarySearchTree. Then instantiate the object, passing in a single parameter that is the filename selected in step 1.
+
+2.2 Create a new dialog that will provide a text box in which the user will enter subsequent text information to submit. The text box where the user will enter their input will be labelled with a java String generated from ourKVStringPairBinarySearchTree.keyTitle + ": " + "<Enter key>". There will be a "Submit" button to the right of the text box. There should also be a "Clear" button at the bottom of the dialog to clear the contents for subsequent queries. The button and the text box should be at the top of the window and allow the user to repeatedly enter data. The text information submitted should then be stored in a string named userInput. The dialog with then call the method Search(userInput) from the object ourKVStringPairBinarySearchTree and will direct the output from that method into the text box (wrapping the text for display), and then accept new user input into that text box, displaying the results in a back-and-forth fashion.
+
+In the dialogues, please use a font size of 16 or greater for readability.
+
+Please include a main method in the class UserQueryCSVDialog that will start the dialog.
+
+I don't need stubs for code items; they are already written.
+

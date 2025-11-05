@@ -1,0 +1,15 @@
+Answer1
+{
+      "date" : "1992-01-01",
+      "realtime_start" : "2025-09-16",
+      "realtime_end" : "2025-09-16",
+      "value" : "159177.0"
+}
+END VALUE
+Answer2
+Date,RSAFS_Value
+1992-01-01,159177.0
+1992-02-01,159189.0
+1992-03-01,158647.0
+1992-04-01,159921.0
+END VALUE

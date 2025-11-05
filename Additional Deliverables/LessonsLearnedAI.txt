@@ -1,0 +1,2 @@
+TODO: In your own words: what can you say about use of AI in coding? How did you approach this problem if some other method than discussed in class? Different sites, different techniques, combination of programming and AI, etc.
+
