@@ -6,6 +6,16 @@ import java.net.*;
 import java.nio.file.*;
 import org.json.*;
 
+import com.mongodb.client.*;
+import org.bson.Document;
+import com.mongodb.client.model.ReplaceOptions;
+import static com.mongodb.client.model.Filters.eq;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.DefaultCategoryDataset;
+
 public class FREDChartDisplayApp {
 
     private String apiKey;
@@ -83,9 +93,11 @@ public class FREDChartDisplayApp {
             topLevel.put("seriess", seriessArr);
 
             showTableFromObservations(observations, seriesId);
+            showLineChartFromObservations(observations, seriesId);
             saveMerges(seriesId, topLevel, observations);
+            saveToMongoDB(seriesId, topLevel);
 
-            JOptionPane.showMessageDialog(mainFrame, "Data fetched and saved as JSON and CSV files.");
+            JOptionPane.showMessageDialog(mainFrame, "Data fetched, saved, uploaded to MongoDB, and chart displayed.");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(mainFrame,
                     "Error during fetch/merge: " + ex.getMessage(),
@@ -101,6 +113,10 @@ public class FREDChartDisplayApp {
         conn.setRequestMethod("GET");
         conn.connect();
 
+        if (conn.getResponseCode() != 200) {
+            throw new IOException("Server returned HTTP response code: " + conn.getResponseCode());
+        }
+
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
             StringBuilder sb = new StringBuilder();
             String line;
@@ -110,18 +126,47 @@ public class FREDChartDisplayApp {
     }
 
     private void showTableFromObservations(JSONArray data, String seriesId) {
-        String[] columns = {"Date", "Value"};
+        String[] columns = {"Date", seriesId + "_Value"};
         String[][] rows = new String[data.length()][2];
         for (int i = 0; i < data.length(); i++) {
             JSONObject obs = data.getJSONObject(i);
-            rows[i][0] = obs.optString("date", "");
-            rows[i][1] = obs.optString("value", "");
+            String date = obs.optString("date", "");
+            String value = obs.optString("value", "");
+            rows[i][0] = date;
+            rows[i][1] = value;
         }
         JTable table = new JTable(rows, columns);
 
         JFrame frame = new JFrame("FRED Series: " + seriesId);
         frame.add(new JScrollPane(table));
         frame.setSize(650, 400);
+        frame.setLocationRelativeTo(mainFrame);
+        frame.setVisible(true);
+    }
+
+    private void showLineChartFromObservations(JSONArray data, String seriesId) {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        for (int i = 0; i < data.length(); i++) {
+            JSONObject obs = data.getJSONObject(i);
+            String date = obs.optString("date", "");
+            String valueStr = obs.optString("value", "");
+            double value = 0.0;
+            try {
+                value = Double.parseDouble(valueStr);
+            } catch (NumberFormatException e) {
+                continue; // skip invalid numbers
+            }
+            dataset.addValue(value, seriesId, date);
+        }
+
+        JFreeChart chart = ChartFactory.createLineChart(
+                seriesId + " Time Series Chart", "Date", "Value", dataset
+        );
+        ChartPanel chartPanel = new ChartPanel(chart);
+        JFrame frame = new JFrame("FRED Chart: " + seriesId);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(800, 600);
+        frame.add(chartPanel);
         frame.setLocationRelativeTo(mainFrame);
         frame.setVisible(true);
     }
@@ -140,8 +185,22 @@ public class FREDChartDisplayApp {
             out.println("Date," + seriesId + "_Value");
             for (int i = 0; i < observations.length(); i++) {
                 JSONObject obj = observations.getJSONObject(i);
-                out.println(obj.optString("date", "") + "," + obj.optString("value", ""));
+                String date = obj.optString("date", "");
+                String value = obj.optString("value", "");
+                out.println(date + "," + value);
             }
+        }
+    }
+
+    private void saveToMongoDB(String seriesId, JSONObject mergedData) {
+        try (MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017")) {
+            MongoDatabase database = mongoClient.getDatabase("testdb");
+            MongoCollection<Document> collection = database.getCollection("FREDData");
+            Document doc = Document.parse(mergedData.toString());
+            doc.put("_id", seriesId);
+            collection.replaceOne(eq("_id", seriesId), doc, new ReplaceOptions().upsert(true));
+        } catch (Exception e) {
+            System.err.println("MongoDB error: " + e.getMessage());
         }
     }
 
@@ -161,6 +220,7 @@ public class FREDChartDisplayApp {
                         JSONArray obs = first.getJSONArray("observations");
                         String seriesId = first.optString("id", selFile.getName().replace(".json", ""));
                         showTableFromObservations(obs, seriesId);
+                        showLineChartFromObservations(obs, seriesId);
                     }
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(mainFrame,

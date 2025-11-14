@@ -1,1 +1,25 @@
-TODO: Put consolidated FredChartDisplayAppQuery here
+1. Create a Java Swing application named FREDChartDisplayApp that fetches, saves, displays, and manages time series economic data from the FRED API.
+2. Ensure the application prompts for the FRED API key when launched and retains it for the session.
+3. Provide a main window with menu options for:
+   3.1. "Fetch FRED Data" – allow the user to enter a FRED Series ID (default: RSAFS), fetch metadata and observations using separate FRED API requests, then merge both responses into one JSON object.
+   3.2. "Display Data from File" – allow the user to select a saved JSON file (e.g., RSAFS.json) and visualize its time series data.
+   3.3. "Exit" – closes the application.
+4. When fetching data, merge series metadata and observations so the top-level JSON includes a key named "seriess", containing an array whose first object holds fields "id", metadata, and "observations", each with "date", "realtime_start", "realtime_end", and "value".
+5. Save the merged JSON object as a pretty-printed file named RSAFS.json in DataFiles/FREDData-JSON and save the observations as a CSV file named RSAFS.csv in DataFiles/FREDData-CSV.
+6. Format the CSV file to use the header "Date,RSAFS_Value" then provide records for the first five observations as shown in the sample:
+   6.1. Date,RSAFS_Value
+   6.2. 1992-01-01,159177.0
+   6.3. 1992-02-01,159189.0
+   6.4. 1992-03-01,158647.0
+   6.5. 1992-04-01,159921.0
+7. Display time-series data in the app using a JTable (or optionally JFreeChart if graphical charts are required).
+8. Ensure the output files (RSAFS.json and RSAFS.csv) match exactly the structure and field names expected by the project test cases, including handling up-to-date fields such as "realtime_start".
+9. Make sure the app and code pass test cases that assert the content and structure of the JSON and CSV files are correct and that the first observation matches expected values as found in the provided test resources.
+10. Address issues such as deprecated API usage and compiler warnings as needed, but focus on the required FRED API features, file output formats, and compatibility with grading/test harness in your project.
+
+***
+
+You can reuse this numbered query at any time to regenerate your FREDChartDisplayApp and ensure it meets your assignment, instructor, and test case requirements.
+
+[1](https://stackoverflow.com/questions/49250176/displaying-a-series-of-data-in-jfreechart)
+[2](https://stackoverflow.com/questions/26647352/customizing-jfreechart)
