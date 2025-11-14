@@ -1,3 +1,65 @@
 What did I learn from this assignment? (Enter into AI for comprehensive answer)
 
-TODO: Enter AI-generated or your answer with edits
+Here are several **key lessons learned** from building and debugging the FREDChartDisplayApp project:
+
+***
+
+### 1. **Validate API Inputs and Outputs**
+- Using the wrong FRED Series ID or API Key results in clear and consistent API errors (like HTTP 400).
+- Always confirm spelling, case, and current documentation before sending requests.
+- Parsing and handling API errors is crucial for robust, user-friendly applications.
+
+***
+
+### 2. **Match Data Formats Precisely**
+- Automated test cases (especially in academic settings) expect exact output file names, structures (JSON/CSV), and field names.
+- Small differences (like header capitalization) can cause test failures; careful attention to specs is essential.
+
+***
+
+### 3. **Integrate Libraries Thoughtfully**
+- Adding external libraries (e.g., org.json, JFreeChart, MongoDB Java driver) is straightforward, but requires attention to dependencies and project configuration.
+- Use popular, well-documented libraries for charting, JSON parsing, and database access to save time and avoid pitfalls.
+
+***
+
+### 4. **Modular Code, Clear Data Structures**
+- Separating concerns (API access, data parsing, UI display, DB interaction) makes the code maintainable and error-resistant.
+- Using domain-specific data structures (JSONObject, JSONArray, DefaultCategoryDataset, MongoDB Document) speeds up development and debugging.
+
+***
+
+### 5. **Handle Changing Data and Test Expectations**
+- Live remote data can change, leading to mismatches with static test cases.
+- Update test resources regularly, use manual inspection, and provide clear documentation when actual data diverges from expected test values.
+
+***
+
+### 6. **User Experience and Error Handling**
+- Prompting users for inputs and handling empty or invalid data gracefully leads to better usability.
+- Displaying clear error messages for API, I/O, or database failures reduces confusion.
+
+***
+
+### 7. **Real-World Interoperability**
+- Connecting a Java Swing GUI app to both cloud APIs and local databases (MongoDB) demonstrates full-stack application design.
+- Practical deployment requires coordination between app code, local services (MongoDB), and external systems (FRED).
+
+***
+
+### **Summary Table**
+
+| Lesson                       | Explanation                                            |
+|------------------------------|-------------------------------------------------------|
+| Validate Inputs/Outputs      | Prevents easy-to-miss runtime errors.                 |
+| Match Data Formats           | Ensures test and grading compatibility.               |
+| Use Libraries Wisely         | Accelerates development; leverage documentation.      |
+| Modular Code                 | Improves maintainability and reliability.             |
+| Adapt to Changing Data       | Be ready for evolving APIs and data sources.          |
+| UX/Error Handling            | Key for user happiness and easier debugging.          |
+| Interoperability             | Bundles local and cloud technologies into one app.    |
+
+***
+
+**The biggest lesson:**
+Careful attention to input, output, error handling, and test compliance—combined with smart library choices and modular design—are essential for successful, full-featured Java applications connected to real-world data and services.

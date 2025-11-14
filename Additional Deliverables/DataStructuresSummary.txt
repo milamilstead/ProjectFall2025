@@ -1,3 +1,54 @@
 Can you please provide a summary of the major Data Structures and their usage in this application (FredChartDisplayApp)? (submit to AI along with the final code for FREDChartDisplayApp.java)
 
-TODO: put your answer here:
+Certainly! Here’s a summary of the **major data structures** and their usage in the FREDChartDisplayApp:
+
+***
+
+### 1. **JSONObject (org.json)**
+- **Usage:** Represents structured data fetched from the FRED API, including the series metadata and merged result.
+- **In Code:** Holds key/value pairs for FRED series metadata (`seriesMeta`), top-level merged data (`topLevel`), and parsed objects from files.
+- **Purpose:** Efficiently parses, merges, and serializes JSON data for saving, loading, and insertion into MongoDB.
+
+***
+
+### 2. **JSONArray (org.json)**
+- **Usage:** Stores lists of time series observations from the FRED API, such as `"observations"`.
+- **In Code:** Used for parsing observations from API, merging into JSON results, iterating for CSV output, and rendering table/chart data.
+- **Purpose:** Enables sequential access to observation points and supports bulk data operations (display, export).
+
+***
+
+### 3. **String[] and String[][] Arrays**
+- **Usage:** Temporary holders for table column names and row values.
+- **In Code:** Used in `showTableFromObservations` to transform JSON time-series data into tabular format for JTable display.
+- **Purpose:** Makes displaying time-series points fast and direct within Java’s Swing UI.
+
+***
+
+### 4. **DefaultCategoryDataset (JFreeChart)**
+- **Usage:** Underpins the chart rendering; maps time-series dates as X-axis and values as Y-axis.
+- **In Code:** Built in `showLineChartFromObservations` by adding values from each observation for JFreeChart to plot.
+- **Purpose:** Abstracts data for versatile charting: line charts, bar charts, etc.
+
+***
+
+### 5. **MongoDB Document**
+- **Usage:** BSON-style documents to store the merged JSON data in the MongoDB collection.
+- **In Code:** Created from JSON in `saveToMongoDB` for upsert operations by `_id`.
+- **Purpose:** Makes persistence/retrieval of the full time-series dataset efficient and scalable for database operations.
+
+***
+
+### **Summary Table**
+
+| Data Structure         | Use Case                                 | Related Tasks                |
+|-----------------------|-------------------------------------------|------------------------------|
+| JSONObject            | JSON parsing, merging, saving, DB insert  | API fetch, file I/O, MongoDB |
+| JSONArray             | List of observations, table/chart data    | API fetch, display, export   |
+| String[], String[][]  | JTable columns and rows                   | Display in Swing tables      |
+| DefaultCategoryDataset| Chart data binding for JFreeChart         | Render time series chart     |
+| MongoDB Document      | Database upsert of merged series/obs      | Store/retrieve from DB       |
+
+***
+
+**These structures provide modular storage, parsing, and display of FRED data, ensuring performance and clarity in your codebase.**
